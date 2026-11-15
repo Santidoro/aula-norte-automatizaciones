@@ -1,0 +1,255 @@
+{
+  "name": "Resumen diario",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -96,
+        0
+      ],
+      "id": "2775ebca-2cf2-498e-897c-92243e741e3b",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT interesados.nombre, cursos.nombre AS curso, interesados.temperatura\nFROM interesados JOIN cursos ON interesados.curso_id = cursos.id\nWHERE interesados.creado_en > now() - interval '24 hours'\nORDER BY CASE interesados.temperatura\nWHEN 'caliente' THEN 1\nWHEN 'tibio' THEN 2\nWHEN 'frio' THEN 3\nELSE 4\nEND;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.8,
+      "position": [
+        256,
+        0
+      ],
+      "id": "ddb561d4-8cf5-4e64-81e4-4795de984f4c",
+      "name": "Nuevos 24h",
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "lifCm3W1FWjO8cr2",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "convertToHtmlTable",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        -32
+      ],
+      "id": "044d3a6f-2699-4241-9d80-8b860d6a6a39",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "sendTo": "santidoro10@gmail.com",
+        "subject": "=Aula Norte: {{ $('Nuevos 24h').all().length }} interesados nuevos",
+        "message": "={{ $json.table }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        -48
+      ],
+      "id": "490631e1-050e-4e34-952b-84172ab95aeb",
+      "name": "Send a message",
+      "webhookId": "e1918507-0313-4ec8-ac4a-843bf4fa723d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "bAC853dZgkaUqc38",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "ysTLtPyAefrHG559",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ysTLtPyAefrHG559",
+          "cachedResultName": "Clasificador de interesados"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        64,
+        0
+      ],
+      "id": "8b2cfbb1-639c-45c9-9bbe-aa5073b6aafd",
+      "name": "Call 'Clasificador de interesados'",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "32c7adea-548f-471e-a34f-e473bce299bb",
+              "leftValue": "={{ $json.nombre }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        448,
+        0
+      ],
+      "id": "2eb91724-7bfa-4950-9b5e-f0760f3affae",
+      "name": "¿Hay nuevos?"
+    },
+    {
+      "parameters": {
+        "sendTo": "santidoro10@gmail.com",
+        "subject": "Aula Norte: 0 interesados nuevos",
+        "message": "<p>Hoy no entró ningún interesado.</p>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        688,
+        144
+      ],
+      "id": "89847c52-a148-45d0-af93-cf7963443767",
+      "name": "Send a message1",
+      "webhookId": "c6c836bc-3cde-4d1d-a59c-8b45a6002a37",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "bAC853dZgkaUqc38",
+          "name": "Gmail account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Call 'Clasificador de interesados'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nuevos 24h": {
+      "main": [
+        [
+          {
+            "node": "¿Hay nuevos?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Clasificador de interesados'": {
+      "main": [
+        [
+          {
+            "node": "Nuevos 24h",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay nuevos?": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "versionId": "cee0a12d-8d03-4b07-90e8-b8257e1bd784",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d740fff286a0ddff67b566f75db3d844f85b136966ca61c1d8faf4830c4e9788"
+  },
+  "nodeGroups": [],
+  "id": "QnJNwJLx3DVwTDp6",
+  "tags": []
+}
