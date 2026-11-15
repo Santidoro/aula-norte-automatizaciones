@@ -1,0 +1,165 @@
+{
+  "name": "Flujo 3, “Interesado · API”",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "aula-norte-interesado",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        -272,
+        0
+      ],
+      "id": "863286a1-1439-4f31-b7ba-ef51dba84e37",
+      "name": "Webhook",
+      "webhookId": "bfef5d4e-efa1-4516-b5a0-064b8b85bac7",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "laovsgbJODO8CbrX",
+          "name": "X-Clave-Aula"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": "={{ $json.ok ? 200 : 400 }}"
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        176,
+        0
+      ],
+      "id": "d28e94a2-c3b8-4635-83b0-6dd2965fd42a",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "VEsZilBVuv4R20i4",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/VEsZilBVuv4R20i4",
+          "cachedResultName": "Flujo 1, “Guardar interesado · lógica\""
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        -16,
+        128
+      ],
+      "id": "e8037549-de94-4be4-bc41-e2642a2a451e",
+      "name": "Call 'Flujo 1, “Guardar interesado · lógica\"'"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "87357d17-bcba-41c6-a451-c0b6059b84fd",
+              "name": "nombre",
+              "value": "={{ $json.body.nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "fd07ff87-6893-4d46-8b17-c65115a15245",
+              "name": "email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "86215340-721e-4fd9-9252-ffe3274ee2c3",
+              "name": "curso",
+              "value": "={{ $json.body.curso }}",
+              "type": "string"
+            },
+            {
+              "id": "ee256709-a477-467b-a82f-aa6d758968e0",
+              "name": "mensaje",
+              "value": "={{ $json.body.mensaje }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -80,
+        -144
+      ],
+      "id": "106e839c-dfb7-474c-ab80-dae6b82f1a2a",
+      "name": "Aplanar webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Aplanar webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Flujo 1, “Guardar interesado · lógica\"'": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aplanar webhook": {
+      "main": [
+        [
+          {
+            "node": "Call 'Flujo 1, “Guardar interesado · lógica\"'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "versionId": "a3670e96-ee87-4e8c-97ff-c6d05776240b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d740fff286a0ddff67b566f75db3d844f85b136966ca61c1d8faf4830c4e9788"
+  },
+  "nodeGroups": [],
+  "id": "pXuT6IsWQlQaKjdi",
+  "tags": []
+}
