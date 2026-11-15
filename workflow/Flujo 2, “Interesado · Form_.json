@@ -1,0 +1,148 @@
+{
+  "name": "Flujo 2, “Interesado · Form\"",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "contacto",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "nombre"
+            },
+            {
+              "fieldLabel": "email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "curso",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Excel avanzado"
+                  },
+                  {
+                    "option": "Inglés para entrevistas"
+                  },
+                  {
+                    "option": "Marketing digital"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "mensaje"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -64,
+        0
+      ],
+      "id": "587b066e-e934-4ec5-ac2b-3c05e2706168",
+      "name": "On form submission",
+      "webhookId": "be1d9c6e-0f35-4b63-9efb-db048c2df75a",
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "VEsZilBVuv4R20i4",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/VEsZilBVuv4R20i4",
+          "cachedResultName": "Flujo 1, “Guardar interesado · lógica\""
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        128,
+        -192
+      ],
+      "id": "7089cdfa-2ed5-428f-86c4-46bfc924d7f6",
+      "name": "Call 'Guardar interesado logica'"
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "completionTitle": "={{ $json.ok ? '¡Gracias! Te contactamos pronto' : 'No pudimos registrarte: ' + $json.error }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [
+        272,
+        -336
+      ],
+      "id": "d9204042-baab-4051-8944-a0ff81d93263",
+      "name": "Form",
+      "webhookId": "6c2ff0b3-d14b-4929-a658-56d1cb574262"
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "nombre": "santino",
+          "email": "santi@mil.com",
+          "curso": "Ings para entrevistas",
+          "mensaje": "hola soy santino",
+          "submittedAt": "2026-11-14T10:21:02.652-03:00",
+          "formMode": "test"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Call 'Guardar interesado logica'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Guardar interesado logica'": {
+      "main": [
+        [
+          {
+            "node": "Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "versionId": "ef1f4c18-1123-47d2-b48c-a309c0da57df",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d740fff286a0ddff67b566f75db3d844f85b136966ca61c1d8faf4830c4e9788"
+  },
+  "nodeGroups": [],
+  "id": "ydnmJJmrBKNCvWaC",
+  "tags": []
+}

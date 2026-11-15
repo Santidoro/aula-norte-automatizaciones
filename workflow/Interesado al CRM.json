@@ -1,0 +1,213 @@
+{
+  "name": "Interesado al CRM",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -176,
+        0
+      ],
+      "id": "7a2ebb3e-db14-4a5e-97ed-be13680ea96b",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "authentication": "appToken",
+        "email": "={{ $json.email }}",
+        "additionalFields": {
+          "firstName": "={{ $json.nombre }}"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        256,
+        0
+      ],
+      "id": "d653b2be-aaa5-4200-95db-1c103b7e46b6",
+      "name": "Create or update a contact",
+      "credentials": {
+        "hubspotAppToken": {
+          "id": "U6hlpZ84wVAr1eDc",
+          "name": "HubSpot Service Key account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE interesados SET crm_id = $1 WHERE id = $2;",
+        "options": {
+          "queryReplacement": "={{ $json.vid }},{{ $('Pendientes de CRM').item.json.id }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.8,
+      "position": [
+        464,
+        0
+      ],
+      "id": "88b5fb48-feba-4a58-b9b1-a8b155894d1b",
+      "name": "Guardar crm_id",
+      "credentials": {
+        "postgres": {
+          "id": "lifCm3W1FWjO8cr2",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, nombre, email FROM interesados WHERE crm_id IS NULL;",
+        "options": {
+          "queryReplacement": ""
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.8,
+      "position": [
+        32,
+        0
+      ],
+      "id": "4737858e-64a8-4e52-9acb-292c4de06330",
+      "name": "Pendientes de CRM",
+      "credentials": {
+        "postgres": {
+          "id": "lifCm3W1FWjO8cr2",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.hubapi.com/crm/v3/objects/contacts",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "hubspotAppToken",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": []
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{ \"properties\": { \"email\": \"prueba@mail.com\", \"firstname\": \"Prueba\" } }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -32,
+        368
+      ],
+      "id": "9d714089-6002-42cf-83a9-265a3290480a",
+      "name": "HTTP Request",
+      "credentials": {
+        "hubspotAppToken": {
+          "id": "U6hlpZ84wVAr1eDc",
+          "name": "HubSpot Service Key account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        368
+      ],
+      "id": "a8018dea-8127-4fba-8527-12b62caa5879",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {
+    "Pendientes de CRM": [
+      {
+        "json": {
+          "id": 1,
+          "nombre": "Lucía",
+          "email": "lucia@mail.com"
+        }
+      },
+      {
+        "json": {
+          "id": 13,
+          "nombre": "Sean O'Brien",
+          "email": "sean@mail.com"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Pendientes de CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create or update a contact": {
+      "main": [
+        [
+          {
+            "node": "Guardar crm_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pendientes de CRM": {
+      "main": [
+        [
+          {
+            "node": "Create or update a contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "versionId": "f687f51c-0502-4b68-a6d0-c3e88e63bd1d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d740fff286a0ddff67b566f75db3d844f85b136966ca61c1d8faf4830c4e9788"
+  },
+  "nodeGroups": [],
+  "id": "aG84udITCabqyRBM",
+  "tags": []
+}
