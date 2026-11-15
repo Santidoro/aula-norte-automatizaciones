@@ -23,7 +23,7 @@ flowchart LR
 | Interesado · Form | Entry for people: n8n Form → logic → thank-you or error page. |
 | Interesado · API | Entry for systems: Webhook (POST, Header Auth) → logic → HTTP 200 or 400 with JSON. |
 | Interesado al CRM | Sends new leads to HubSpot and stores the CRM id. |
-| Calificador de interesados | Classifies each lead as hot / warm / cold with an LLM (structured output + validation). Blocks prompt-injection attempts. |
+| Calificador de interesados | Classifies each lead as hot / warm / cold with an LLM (structured output + validation). Flags likely prompt-injection attempts for human review. |
 | Evaluación calificador | 29 test cases. Accuracy went from 71% to 93%. |
 | Resumen diario HTML | Every morning at 9: scores pending leads, then emails an HTML table of the last 24 h sorted by priority. Sends an email even with 0 leads. |
 
