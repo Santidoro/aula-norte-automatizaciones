@@ -1,1 +1,1 @@
-# aula-norte-automatizaciones
+Automatizaciones con n8n para una escuela online ficticia
