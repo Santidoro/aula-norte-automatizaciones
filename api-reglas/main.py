@@ -3,8 +3,8 @@ from fastapi import FastAPI
 app = FastAPI()
 
 CURSOS = [
-    {"id": 1, "nombre": "Excel", "precio": 120},
-    {"id": 2, "nombre": "Inglés", "precio": 180},
+    {"id": 1, "nombre": "Excel avanzado", "precio": 120},
+    {"id": 2, "nombre": "Inglés para entrevistas", "precio": 180},
     {"id": 4, "nombre": "Marketing digital", "precio": 160},
 ]
 
