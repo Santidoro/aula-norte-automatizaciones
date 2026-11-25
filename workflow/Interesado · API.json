@@ -1,30 +1,6 @@
 {
-  "name": "Flujo 3, “Interesado · API”",
+  "name": "Interesado · API",
   "nodes": [
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "aula-norte-interesado",
-        "authentication": "headerAuth",
-        "responseMode": "responseNode",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.2,
-      "position": [
-        -272,
-        0
-      ],
-      "id": "863286a1-1439-4f31-b7ba-ef51dba84e37",
-      "name": "Webhook",
-      "webhookId": "bfef5d4e-efa1-4516-b5a0-064b8b85bac7",
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "laovsgbJODO8CbrX",
-          "name": "X-Clave-Aula"
-        }
-      }
-    },
     {
       "parameters": {
         "options": {
@@ -34,7 +10,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        176,
+        160,
         0
       ],
       "id": "d28e94a2-c3b8-4635-83b0-6dd2965fd42a",
@@ -47,7 +23,7 @@
           "value": "VEsZilBVuv4R20i4",
           "mode": "list",
           "cachedResultUrl": "/workflow/VEsZilBVuv4R20i4",
-          "cachedResultName": "Flujo 1, “Guardar interesado · lógica\""
+          "cachedResultName": "Guardar interesado · lógica"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -105,26 +81,52 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        -80,
-        -144
+        -48,
+        -64
       ],
       "id": "106e839c-dfb7-474c-ab80-dae6b82f1a2a",
       "name": "Aplanar webhook"
+    },
+    {
+      "parameters": {
+        "content": "Recibe interesados desde otros sistemas, llama a la misma lógica y responde 200 {ok, id} o 400 {ok, error}."
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -208
+      ],
+      "id": "c79f6865-183c-4a29-a1a5-3ea4bab8ff31",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "aula-norte-interesado",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        -208,
+        48
+      ],
+      "id": "863286a1-1439-4f31-b7ba-ef51dba84e37",
+      "name": "Recibir interesado",
+      "webhookId": "bfef5d4e-efa1-4516-b5a0-064b8b85bac7",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "laovsgbJODO8CbrX",
+          "name": "X-Clave-Aula"
+        }
+      }
     }
   ],
   "pinData": {},
   "connections": {
-    "Webhook": {
-      "main": [
-        [
-          {
-            "node": "Aplanar webhook",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Call 'Flujo 1, “Guardar interesado · lógica\"'": {
       "main": [
         [
@@ -146,15 +148,29 @@
           }
         ]
       ]
+    },
+    "Recibir interesado": {
+      "main": [
+        [
+          {
+            "node": "Aplanar webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate",
-    "availableInMCP": true
+    "availableInMCP": true,
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "o6jE8l5Lr9QznJmG",
+    "callerPolicy": "workflowsFromSameOwner"
   },
-  "versionId": "a3670e96-ee87-4e8c-97ff-c6d05776240b",
+  "versionId": "4f053c01-88f0-4bac-80bb-ddf8e4cc7491",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "d740fff286a0ddff67b566f75db3d844f85b136966ca61c1d8faf4830c4e9788"

@@ -1,0 +1,661 @@
+{
+  "name": "Guardar interesado · lógica",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id FROM cursos WHERE nombre = $1 AND activo = true;",
+        "options": {
+          "queryReplacement": "={{ $('Normalizar contacto').item.json.curso }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.8,
+      "position": [
+        560,
+        -176
+      ],
+      "id": "bca59491-67d6-4659-b866-604c0af17836",
+      "name": "Buscar curso",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "lifCm3W1FWjO8cr2",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO interesados (nombre, email, curso_id, mensaje)\nVALUES ($1, $2, $3, $4)\nON CONFLICT (email) DO UPDATE\nSET curso_id = COALESCE(EXCLUDED.curso_id, interesados.curso_id),\n    mensaje  = EXCLUDED.mensaje\nRETURNING id;",
+        "options": {
+          "queryReplacement": "={{ [ $('Normalizar contacto').item.json.nombre, $('Normalizar contacto').item.json.email, $json.id, $('Normalizar contacto').item.json.mensaje ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.8,
+      "position": [
+        928,
+        -304
+      ],
+      "id": "f1cf33cc-19a8-4696-8eb8-9e72a5ea813d",
+      "name": "guardar",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "lifCm3W1FWjO8cr2",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "d94d22d5-ab43-40c6-9490-b6a254fdb479",
+              "leftValue": "={{ $json.ok }}",
+              "rightValue": "@",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        432,
+        -32
+      ],
+      "id": "d388fb4e-364a-401c-be7e-e65ee8a25200",
+      "name": "¿Datos válidos?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "cbabd93a-5c4b-4d45-be04-db9b9229c15a",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "dateTime",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        704,
+        -272
+      ],
+      "id": "0dc8b0c8-a82e-407a-a8a1-eb66cfd663e5",
+      "name": "¿Existe el curso?"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -112,
+        -16
+      ],
+      "id": "41e1fa1a-4ac9-4ae0-8d46-2b501918a5ae",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fb0e34ec-c567-410f-84a8-ea88145a9e9c",
+              "name": "ok",
+              "value": "true",
+              "type": "boolean"
+            },
+            {
+              "id": "276d91b5-8e33-43f5-8bdd-cc96d81dd31c",
+              "name": "id",
+              "value": "={{ $('guardar').item.json.id }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1408,
+        -272
+      ],
+      "id": "f8097560-12a3-4335-803f-6a9487aa2f54",
+      "name": "Respuesta OK"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "19070f51-72df-462b-803d-78e4c1695e39",
+              "name": "ok",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "cefee6ce-8e9c-4436-957a-7dcaddd9c9c8",
+              "name": "error",
+              "value": "curso no disponible",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1344,
+        0
+      ],
+      "id": "8de062cd-3ff0-46fa-9338-8c8696acf77f",
+      "name": "Respuesta curso"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "84926292-f8ef-42f3-a324-9d299261447c",
+              "name": "ok",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "2339bbf3-e24d-4ce6-8f75-7f0e145b557f",
+              "name": "error",
+              "value": "faltan datos",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1312,
+        192
+      ],
+      "id": "eb4d1f6a-5526-47c0-940a-510088979efe",
+      "name": "Respuesta datos"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "FMhuTdMul8Gxtq94",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/FMhuTdMul8Gxtq94",
+          "cachedResultName": "Servicio · Registrar evento"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "flujo": "={{ $workflow.name }}",
+            "evento": "rechazado: curso no disponible",
+            "ok": false,
+            "interesado_id": "={{ null }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "flujo",
+              "displayName": "flujo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "evento",
+              "displayName": "evento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "ok",
+              "displayName": "ok",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean",
+              "removed": false
+            },
+            {
+              "id": "interesado_id",
+              "displayName": "interesado_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        928,
+        -96
+      ],
+      "id": "3033993a-062c-4f08-91c6-4043762936ac",
+      "name": "Call 'Servicio · Registrar evento'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "FMhuTdMul8Gxtq94",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/FMhuTdMul8Gxtq94",
+          "cachedResultName": "Servicio · Registrar evento"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "flujo": "={{ $workflow.name }}",
+            "evento": "rechazado: faltan datos",
+            "ok": false,
+            "interesado_id": "={{ null }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "flujo",
+              "displayName": "flujo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "evento",
+              "displayName": "evento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "ok",
+              "displayName": "ok",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean",
+              "removed": false
+            },
+            {
+              "id": "interesado_id",
+              "displayName": "interesado_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        784,
+        144
+      ],
+      "id": "4a248c29-07e0-40a3-88f4-4154e2cc54b8",
+      "name": "Call 'Servicio · Registrar evento'1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "FMhuTdMul8Gxtq94",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/FMhuTdMul8Gxtq94",
+          "cachedResultName": "Servicio · Registrar evento"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ok": true,
+            "flujo": "={{ $workflow.name }}",
+            "evento": "guardado",
+            "interesado_id": "={{ $('guardar').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "flujo",
+              "displayName": "flujo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "evento",
+              "displayName": "evento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "ok",
+              "displayName": "ok",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean",
+              "removed": false
+            },
+            {
+              "id": "interesado_id",
+              "displayName": "interesado_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        1168,
+        -288
+      ],
+      "id": "aec9ee15-cc33-41d3-beb3-2c474e675511",
+      "name": "Call 'Servicio · Registrar evento'2"
+    },
+    {
+      "parameters": {
+        "content": "Normaliza → valida datos → busca el curso → guarda en interesados. Registra el resultado en el log. Devuelve {ok, id} o {ok, error}."
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        208,
+        -336
+      ],
+      "id": "01f0a18e-703b-4f6e-b7ee-ac6772a1daae",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api-reglas-726558799420.europe-southwest1.run.app/validar-interesado",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "nombre",
+              "value": "={{ $json.nombre }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.email }}"
+            },
+            {
+              "name": "curso",
+              "value": "={{ $json.curso }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        256,
+        -32
+      ],
+      "id": "d8dc0e36-b42d-4233-ab50-2d9e339952ea",
+      "name": "Validar en API",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Jkd0FhZMBHBUTObA",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/Jkd0FhZMBHBUTObA",
+          "cachedResultName": "Servicio · Normalizar contacto"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        64,
+        -16
+      ],
+      "id": "46b9c659-32dc-4058-8c7b-afcf3a478cfc",
+      "name": "Normalizar contacto"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Buscar curso": {
+      "main": [
+        [
+          {
+            "node": "¿Existe el curso?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Datos válidos?": {
+      "main": [
+        [
+          {
+            "node": "Buscar curso",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call 'Servicio · Registrar evento'1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Existe el curso?": {
+      "main": [
+        [
+          {
+            "node": "guardar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call 'Servicio · Registrar evento'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "guardar": {
+      "main": [
+        [
+          {
+            "node": "Call 'Servicio · Registrar evento'2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Normalizar contacto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Servicio · Registrar evento'2": {
+      "main": [
+        [
+          {
+            "node": "Respuesta OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Servicio · Registrar evento'": {
+      "main": [
+        [
+          {
+            "node": "Respuesta curso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Servicio · Registrar evento'1": {
+      "main": [
+        [
+          {
+            "node": "Respuesta datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar en API": {
+      "main": [
+        [
+          {
+            "node": "¿Datos válidos?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar contacto": {
+      "main": [
+        [
+          {
+            "node": "Validar en API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true,
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "o6jE8l5Lr9QznJmG",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "933648a0-619e-42e1-8faf-9605b12409bb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d740fff286a0ddff67b566f75db3d844f85b136966ca61c1d8faf4830c4e9788"
+  },
+  "nodeGroups": [],
+  "id": "VEsZilBVuv4R20i4",
+  "tags": []
+}
