@@ -59,7 +59,7 @@
     },
     {
       "parameters": {
-        "sendTo": "santidoro10@gmail.com",
+        "sendTo": "contacto@example.com",
         "subject": "=Aula Norte: {{ $('Nuevos 24h').all().length }} interesados nuevos",
         "message": "={{ $json.table }}",
         "options": {
@@ -149,7 +149,7 @@
     },
     {
       "parameters": {
-        "sendTo": "santidoro10@gmail.com",
+        "sendTo": "contacto@example.com",
         "subject": "Aula Norte: 0 interesados nuevos",
         "message": "<p>Hoy no entró ningún interesado.</p>",
         "options": {

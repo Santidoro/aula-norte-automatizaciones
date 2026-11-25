@@ -115,7 +115,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{ \"properties\": { \"email\": \"prueba@mail.com\", \"firstname\": \"Prueba\" } }",
+        "jsonBody": "{ \"properties\": { \"email\": \"contacto@example.com\", \"firstname\": \"Prueba\" } }",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -140,14 +140,14 @@
         "json": {
           "id": 1,
           "nombre": "Lucía",
-          "email": "lucia@mail.com"
+          "email": "contacto@example.com"
         }
       },
       {
         "json": {
           "id": 13,
           "nombre": "Sean O'Brien",
-          "email": "sean@mail.com"
+          "email": "contacto@example.com"
         }
       }
     ]
