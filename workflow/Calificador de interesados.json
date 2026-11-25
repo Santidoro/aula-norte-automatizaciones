@@ -1,5 +1,5 @@
 {
-  "name": "Clasificador de interesados",
+  "name": "Calificador de interesados",
   "nodes": [
     {
       "parameters": {
@@ -108,7 +108,10 @@
         96
       ],
       "id": "f6f6dc50-bf58-4218-9dee-dff8335657d4",
-      "name": "Calificar con IA"
+      "name": "Calificar con IA",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
     },
     {
       "parameters": {
@@ -257,6 +260,21 @@
       ],
       "id": "64ba7138-66df-4369-a058-79f949ffc585",
       "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "content": "Clasifica a cada interesado como caliente / tibio / frío con un LLM.",
+        "height": 80,
+        "width": 640
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        112,
+        -320
+      ],
+      "id": "d8296af7-e891-41bc-a5a5-bc3fe90f2494",
+      "name": "Sticky Note"
     }
   ],
   "pinData": {},
@@ -379,9 +397,12 @@
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate",
-    "availableInMCP": true
+    "availableInMCP": true,
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "o6jE8l5Lr9QznJmG",
+    "callerPolicy": "workflowsFromSameOwner"
   },
-  "versionId": "82c4769c-83ef-4184-aedf-8263dd0d5fcd",
+  "versionId": "808ce738-3f77-4f5f-8abe-c880797262f2",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "d740fff286a0ddff67b566f75db3d844f85b136966ca61c1d8faf4830c4e9788"

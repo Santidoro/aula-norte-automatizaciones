@@ -59,7 +59,7 @@
     },
     {
       "parameters": {
-        "sendTo": "tu-correo@ejemplo.com",
+        "sendTo": "santidoro10@gmail.com",
         "subject": "=Aula Norte: {{ $('Nuevos 24h').all().length }} interesados nuevos",
         "message": "={{ $json.table }}",
         "options": {
@@ -149,7 +149,7 @@
     },
     {
       "parameters": {
-        "sendTo": "tu-correo@ejemplo.com",
+        "sendTo": "santidoro10@gmail.com",
         "subject": "Aula Norte: 0 interesados nuevos",
         "message": "<p>Hoy no entró ningún interesado.</p>",
         "options": {
@@ -171,6 +171,20 @@
           "name": "Gmail account 2"
         }
       }
+    },
+    {
+      "parameters": {
+        "content": "Corre el Calificador, busca los interesados de las últimas 24 h ordenados por temperatura y manda un email HTML (también si hay 0).",
+        "width": 464
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        64,
+        -176
+      ],
+      "id": "fc16e201-d719-4c33-8ab4-0755d5a2d790",
+      "name": "Sticky Note"
     }
   ],
   "pinData": {},
@@ -242,9 +256,12 @@
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate",
-    "availableInMCP": true
+    "availableInMCP": true,
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "o6jE8l5Lr9QznJmG",
+    "callerPolicy": "workflowsFromSameOwner"
   },
-  "versionId": "cee0a12d-8d03-4b07-90e8-b8257e1bd784",
+  "versionId": "3f21298d-4c1b-4f5b-a2ea-5bba8243c2b6",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "d740fff286a0ddff67b566f75db3d844f85b136966ca61c1d8faf4830c4e9788"

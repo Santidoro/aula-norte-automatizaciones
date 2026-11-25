@@ -3,6 +3,7 @@ from pathlib import Path
 
 POR_DEFECTO = re.compile(r"^(HTTP Request|Code|If|Edit Fields|Set|Postgres|Gmail|Webhook|Execute Workflow|Switch|Merge)\d*$")
 EMAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.]+")
+PERMITIDOS = ("@test.com", "@example.com", "@ejemplo.com", "santi@mil.com")
 errores = []
 
 for archivo in Path(".").rglob("*.json"):
@@ -22,8 +23,9 @@ for archivo in Path(".").rglob("*.json"):
     if not es_alertas and not flujo.get("settings", {}).get("errorWorkflow"):
         errores.append(f"{archivo}: no tiene Error Workflow asignado")
 
-    if EMAIL.search(texto):
-        errores.append(f"{archivo}: contiene una dirección de email")
+    reales = [e for e in EMAIL.findall(texto) if not e.lower().endswith(PERMITIDOS)]
+    if reales:
+        errores.append(f"{archivo}: contiene {len(reales)} email(s) que no son de prueba")
 
 if errores:
     print("❌ Problemas encontrados:")

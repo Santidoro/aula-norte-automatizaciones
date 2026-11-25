@@ -1,5 +1,5 @@
 {
-  "name": "Flujo 2, “Interesado · Form\"",
+  "name": "Interesado · Form",
   "nodes": [
     {
       "parameters": {
@@ -40,8 +40,8 @@
       "type": "n8n-nodes-base.formTrigger",
       "typeVersion": 2.6,
       "position": [
-        -64,
-        0
+        -32,
+        -80
       ],
       "id": "587b066e-e934-4ec5-ac2b-3c05e2706168",
       "name": "On form submission",
@@ -86,11 +86,24 @@
       "typeVersion": 2.5,
       "position": [
         272,
-        -336
+        -320
       ],
       "id": "d9204042-baab-4051-8944-a0ff81d93263",
       "name": "Form",
       "webhookId": "6c2ff0b3-d14b-4929-a658-56d1cb574262"
+    },
+    {
+      "parameters": {
+        "content": "Recibe el formulario web, llama a Guardar interesado · lógica y muestra \"¡Gracias!\" o el error."
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -368
+      ],
+      "id": "3dc45759-f065-483c-acd2-772599109d45",
+      "name": "Sticky Note"
     }
   ],
   "pinData": {
@@ -135,9 +148,12 @@
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate",
-    "availableInMCP": true
+    "availableInMCP": true,
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "o6jE8l5Lr9QznJmG",
+    "callerPolicy": "workflowsFromSameOwner"
   },
-  "versionId": "ef1f4c18-1123-47d2-b48c-a309c0da57df",
+  "versionId": "b7fa38f4-a859-4db8-b269-36cbff083ab7",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "d740fff286a0ddff67b566f75db3d844f85b136966ca61c1d8faf4830c4e9788"

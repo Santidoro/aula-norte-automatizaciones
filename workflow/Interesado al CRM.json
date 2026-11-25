@@ -37,6 +37,8 @@
       ],
       "id": "d653b2be-aaa5-4200-95db-1c103b7e46b6",
       "name": "Create or update a contact",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "hubspotAppToken": {
           "id": "U6hlpZ84wVAr1eDc",
@@ -91,6 +93,17 @@
       }
     },
     {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        368
+      ],
+      "id": "a8018dea-8127-4fba-8527-12b62caa5879",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
       "parameters": {
         "method": "POST",
         "url": "https://api.hubapi.com/crm/v3/objects/contacts",
@@ -112,24 +125,13 @@
         368
       ],
       "id": "9d714089-6002-42cf-83a9-265a3290480a",
-      "name": "HTTP Request",
+      "name": "Crear contacto HubSpot",
       "credentials": {
         "hubspotAppToken": {
           "id": "U6hlpZ84wVAr1eDc",
           "name": "HubSpot Service Key account"
         }
       }
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [
-        -208,
-        368
-      ],
-      "id": "a8018dea-8127-4fba-8527-12b62caa5879",
-      "name": "When clicking ‘Execute workflow’"
     }
   ],
   "pinData": {
@@ -188,7 +190,7 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Crear contacto HubSpot",
             "type": "main",
             "index": 0
           }
@@ -200,9 +202,12 @@
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate",
-    "availableInMCP": true
+    "availableInMCP": true,
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "o6jE8l5Lr9QznJmG",
+    "callerPolicy": "workflowsFromSameOwner"
   },
-  "versionId": "f687f51c-0502-4b68-a6d0-c3e88e63bd1d",
+  "versionId": "dc742aee-01f1-4f7a-a6d6-5920b00e73b8",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "d740fff286a0ddff67b566f75db3d844f85b136966ca61c1d8faf4830c4e9788"
